@@ -1,0 +1,88 @@
+if isinstance(insect,QueenAnt) and insect.count:
+                return 
+
+
+
+
+
+class QueenAnt(ScubaThrower):  # You should change this line
+# END Problem 13
+    """The Queen of the colony. The game is over if a bee enters her place."""
+
+    name = 'Queen'
+    # OVERRIDE CLASS ATTRIBUTES HERE
+    # BEGIN Problem 13
+    implemented = True   # Change to True to view in the GUI
+    food_cost = 7
+    flag = False
+    count = 0
+    queen_place = None
+    
+    # END Problem 13
+
+    def __init__(self, armor=1):
+        # BEGIN Problem 13
+        "*** YOUR CODE HERE ***"
+        ScubaThrower.__init__(self, armor)
+        self.buffed = []
+        if not QueenAnt.flag:
+            self.count = 1
+            QueenAnt.flag = True
+        else :
+            self.count = 0
+        # END Problem 13
+
+    def action(self, colony):
+        """A queen ant throws a leaf, but also doubles the damage of ants
+        in her tunnel.
+
+        Impostor queens do only one thing: reduce their own armor to 0.
+        """
+        # BEGIN Problem 13
+        "*** YOUR CODE HERE ***"
+        if not self.count:
+            self.reduce_armor(self.armor)
+            return 
+       
+        ScubaThrower.action(self, colony)
+        queenant_place = self.place
+        place = queenant_place.exit
+        while place is not None:
+            if place.ant :
+                if place.ant.is_doubled :
+                    place.ant.is_doubled = False
+                    #if isinstance(place.ant,BodyguardAnt) and place.ant.contained_ant:
+                    #    place.ant.contained_ant.damage //= 2 
+                    #else:    
+                    #    place.ant.damage = place.ant.damage // 2
+                    #    place.ant.is_doubled = False
+                elif not place.ant.is_doubled:
+                    if isinstance(place.ant,BodyguardAnt) and place.ant.contained_ant:
+                        place.ant.contained_ant.damage *= 2 
+                    else:    
+                        place.ant.damage = place.ant.damage * 2
+                        
+                        place.ant.is_doubled = True
+                    
+            place = place.exit          
+        
+
+            #return
+
+        # END Problem 13
+
+    def reduce_armor(self, amount):
+        """Reduce armor by AMOUNT, and if the True QueenAnt has no armor
+        remaining, signal the end of the game.
+        """
+        # BEGIN Problem 13
+        "*** YOUR CODE HERE ***"
+        
+        if self.count:
+            self.armor = self.armor - amount
+            if self.armor <=0:
+                bees_win()
+        else:
+             ScubaThrower.reduce_armor(self,amount)
+            
+        # END Problem 13
